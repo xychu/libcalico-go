@@ -37,6 +37,10 @@ type IPPool struct {
 type IPPoolMetadata struct {
 	unversioned.ObjectMetadata
 	CIDR net.IPNet `json:"cidr"`
+
+	// Labels is a map of string keys and values that can be used to organize and categorize
+	// (scope and select) objects.
+	Labels map[string]string `json:"labels,omitempty"`
 }
 
 // IPPoolSpec contains the specification for an IP pool resource.

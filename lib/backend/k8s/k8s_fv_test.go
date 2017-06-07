@@ -858,6 +858,7 @@ var _ = Describe("Test Syncer API for Kubernetes backend", func() {
 					Masquerade:    true,
 					IPAM:          true,
 					Disabled:      true,
+					Labels: map[string]string{"label": "value"},
 				},
 			}
 			_, err := c.Create(pool)
@@ -870,6 +871,7 @@ var _ = Describe("Test Syncer API for Kubernetes backend", func() {
 			Expect(receivedPool.Value.(*model.IPPool).Masquerade).To(Equal(true))
 			Expect(receivedPool.Value.(*model.IPPool).IPAM).To(Equal(true))
 			Expect(receivedPool.Value.(*model.IPPool).Disabled).To(Equal(true))
+			Expect(receivedPool.Value.(*model.IPPool).Labels["label"]).To(Equal("value"))
 		})
 
 		By("deleting the IP Pool", func() {

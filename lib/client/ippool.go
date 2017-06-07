@@ -149,6 +149,12 @@ func (h *ipPools) convertAPIToKVPair(a unversioned.Resource) (*model.KVPair, err
 		return nil, err
 	}
 
+	labels := ap.Metadata.Labels
+	if labels == nil {
+		log.Info("Labels is nil - convert to empty map for backend")
+		labels = map[string]string{}
+	}
+
 	// Only valid interface for now is tunl0.
 	var ipipInterface string
 	var ipipMode ipip.Mode
@@ -170,6 +176,7 @@ func (h *ipPools) convertAPIToKVPair(a unversioned.Resource) (*model.KVPair, err
 			Masquerade:    ap.Spec.NATOutgoing,
 			IPAM:          !ap.Spec.Disabled,
 			Disabled:      ap.Spec.Disabled,
+			Labels:        labels,
 		},
 	}
 
@@ -184,6 +191,7 @@ func (h *ipPools) convertKVPairToAPI(d *model.KVPair) (unversioned.Resource, err
 
 	apiPool := api.NewIPPool()
 	apiPool.Metadata.CIDR = backendPool.CIDR
+	apiPool.Metadata.Labels = backendPool.Labels
 	apiPool.Spec.NATOutgoing = backendPool.Masquerade
 	apiPool.Spec.Disabled = backendPool.Disabled
 
